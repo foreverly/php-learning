@@ -1,22 +1,101 @@
 <?php
 namespace app\index\controller;
-
+vendor('jsonRPC.jsonRPCClient');
+// $client = new \jsonRPCClient('http://localhost:8534');
+// dump($client->personal_newAccount("123456"));
 class Btc
 {
-    public function test()
+    // 查看网络状态
+    public function getnetworkinfo()
     {
-    	$request_data = [
-		  	'json' => [
-		    	'jsonrpc' => '2.0',
-		    	'method' => 'sendtoaddress',
-		    	'params' => ['1LeiqzD6jCwPcdNNAPiT8ayKgdHJMP2EpZ', 0.23],
-		    	'id' => time()
-		  	]
-		];
+        $request_data = [
+            'json' => [
+                'jsonrpc' => '2.0',
+                'method' => 'getnetworkinfo',
+                'params' => [],
+                'id' => time()
+            ]
+        ];
 
-		$request_url = "http://testbtc:testbtc@127.0.0.1:18332";
+        $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
 
-		$res = $this->requestPost($request_url, $request_data);
+        $res = $this->requestPost($request_url, $request_data);
+
+        var_dump($res);
+    }
+
+    // 查看区块状态，同步进度等
+    public function getblockchaininfo()
+    {
+        $request_data = [
+            'json' => [
+                'jsonrpc' => '2.0',
+                'method' => 'getblockchaininfo',
+                'params' => [],
+                'id' => time()
+            ]
+        ];
+
+        $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
+
+        $res = $this->requestPost($request_url, $request_data);
+
+        var_dump($res);
+    }
+
+    // 创建一个钱包账户
+    public function getnewaddress()
+    {
+        $request_data = [
+            'json' => [
+                'jsonrpc' => '2.0',
+                'method' => 'getnewaddress',
+                'params' => [],
+                'id' => time()
+            ]
+        ];
+
+        $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
+
+        $res = $this->requestPost($request_url, $request_data);
+
+        var_dump($res);
+    }  
+
+    // 钱包总余额
+    public function getbalance()
+    {
+        $request_data = [
+            'json' => [
+                'jsonrpc' => '2.0',
+                'method' => 'getbalance',
+                'params' => [],
+                'id' => time()
+            ]
+        ];
+
+        $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
+
+        $res = $this->requestPost($request_url, $request_data);
+
+        var_dump($res);
+    }  
+
+    // 每个账户的余额
+    public function listunspent()
+    {
+        $request_data = [
+            'json' => [
+                'jsonrpc' => '2.0',
+                'method' => 'getnetworkinfo',
+                'params' => [],
+                'id' => time()
+            ]
+        ];
+
+        $request_url = "http://regbtc:regbtc@127.0.0.1:18332";
+
+        $res = $this->requestPost($request_url, $request_data);
 
         var_dump($res);
     }
