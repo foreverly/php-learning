@@ -17,6 +17,8 @@ class Btc
 		$request_url = "http://user:pass@localhost:18332";
 
 		$res = $this->requestPost($request_url, $request_data);
+
+        var_dump($res);
     }
 
     /**
