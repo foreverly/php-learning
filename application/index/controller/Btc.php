@@ -7,14 +7,14 @@ class Btc
     {
     	$request_data = [
 		  	'json' => [
-		    	'jsonrpc' => '1.0',
+		    	'jsonrpc' => '2.0',
 		    	'method' => 'sendtoaddress',
 		    	'params' => ['1LeiqzD6jCwPcdNNAPiT8ayKgdHJMP2EpZ', 0.23],
 		    	'id' => time()
 		  	]
 		];
 
-		$request_url = "http://user:pass@localhost:18332";
+		$request_url = "http://testbtc:testbtc@127.0.0.1:18332";
 
 		$res = $this->requestPost($request_url, $request_data);
 
@@ -50,7 +50,7 @@ class Btc
             $error = curl_errno($ch);
             curl_close($ch);
 
-            return 'curl出错，错误码('.$error.')';
+            return 'curl出错，错误码('.$error.')，couldn`t connect to host。';
         }
     }
 }
