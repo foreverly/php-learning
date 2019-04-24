@@ -32,12 +32,7 @@ class Btc
     // 查看区块状态，同步进度等
     public function getblockchaininfo()
     {
-        $client = new JsonRPCClient($this->mainnet);
-
-        echo "<pre>\n";
-        print_r($client->getblockchaininfo()); echo "\n";
-        echo "Received: ".$client->getreceivedbylabel("Your Address")."\n";
-        echo "</pre>";
+        dd($this->client->getblockchaininfo());
     }
 
     // 创建一个钱包账户
@@ -49,49 +44,25 @@ class Btc
             dd("address can`t be null");exit;
         }
 
-        dd($client->getnewaddress($address));
+        dd($this->client->getnewaddress($address));
     }  
 
     // list账户
     public function listlabels()
     {
-        $client = new JsonRPCClient($this->mainnet);
-        
-        echo "<pre>\n";
-        print_r($client->listlabels()); echo "\n";
-        echo "Received: ".$client->getreceivedbylabel("Your Address")."\n";
-        echo "</pre>";
+        dd($this->client->listlabels());
     }
 
     // 钱包总余额
     public function getbalance()
     {
-        $client = new JsonRPCClient($this->mainnet);
-        
-        echo "<pre>\n";
-        print_r($client->getbalance()); echo "\n";
-        echo "Received: ".$client->getreceivedbylabel("Your Address")."\n";
-        echo "</pre>";
+        dd($this->client->getbalance());
     }  
 
     // 每个账户的余额
     public function listunspent()
     {
-        $request_data = [
-            'json' => [
-                'jsonrpc' => '2.0',
-                'method' => 'listunspent',
-                'params' => [],
-                'id' => time()
-            ]
-        ];
-
-        $request_url = "http://admin:admin@127.0.0.1:8332";
-
-        $client = new Client();
-        $res = $client->post($request_url, $request_data);
-        echo '<pre>';
-        var_dump($res);
+        dd($this->client->listunspent());
     }
 
 }
