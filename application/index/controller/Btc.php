@@ -24,7 +24,6 @@ class Btc
     {        
         $client = new JsonRPCClient($this->regnet);
         $client->method = 'getnetworkinfo';
-        $client->id = time();
         $client->params = [];
         // $res = $client->post($this->regnet, $request_data);
         // $res = $this->curlPost($this->regnet, $request_data);
