@@ -101,7 +101,7 @@ class Btc
         var_dump($res);
     }
 
-    public function initData($method = null, $params = [], $jsonrpc = '1.0', $id = time())
+    public function initData($method, $params, $jsonrpc, $id)
     {
         if (!$method) {
             echo 'method can`t be null';exit;
@@ -109,10 +109,10 @@ class Btc
 
         return [
             'json' => [
-                'jsonrpc' => $jsonrpc,
+                'jsonrpc' => $jsonrpc ?: '1.0',
                 'method' => $method,
-                'params' => $params,
-                'id' => $id
+                'params' => $params ?: [],
+                'id' => $id ?: []
             ]
         ];
     }
