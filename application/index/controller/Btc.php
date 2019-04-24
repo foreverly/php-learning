@@ -8,6 +8,7 @@ class Btc
     private $regnet;
     private $testnet;
     private $mainnet;
+    private $client;
 
     public function __construct()
     {
@@ -51,6 +52,14 @@ class Btc
     public function listlabels()
     {
         dd($this->client->listlabels());
+    }
+
+    // 挖矿
+    public function generate()
+    {
+        $number = $_GET['number'] ?? 1;
+
+        dd($this->client->generate((int)$number));
     }
 
     // 钱包总余额
