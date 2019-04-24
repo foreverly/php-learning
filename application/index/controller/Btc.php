@@ -4,22 +4,26 @@ use GuzzleHttp\Client;
 
 class Btc
 {
+    private $reg_url;
+    private $test_url;
+
+    public function __construct()
+    {
+        $this->regnet = 'http://regbtc:regbtc@127.0.0.1:18334';
+        $this->testnet = 'http://testbtc:testbtc@127.0.0.1:18332';
+    }
+    public function phpinfo()
+    {
+        echo phpinfo();
+    }
+
     // 查看网络状态
     public function getnetworkinfo()
     {
-        $request_data = [
-            'json' => [
-                'jsonrpc' => '2.0',
-                'method' => 'getnetworkinfo',
-                'params' => [],
-                'id' => time()
-            ]
-        ];
-
-        $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
+        $request_data = $this->initData('getnetworkinfo');
 
         $client = new Client();
-        $res = $client->post($request_url, $request_data);
+        $res = $client->post($this->regnet, $request_data);
 
         var_dump($res);
     }
@@ -27,19 +31,12 @@ class Btc
     // 查看区块状态，同步进度等
     public function getblockchaininfo()
     {
-        $request_data = [
-            'json' => [
-                'jsonrpc' => '2.0',
-                'method' => 'getblockchaininfo',
-                'params' => [],
-                'id' => time()
-            ]
-        ];
+        $request_data = $this->initData('getblockchaininfo');
 
-        $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
+        // $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
 
         $client = new Client();
-        $res = $client->post($request_url, $request_data);
+        $res = $client->post($this->regnet, $request_data);
 
         var_dump($res);
     }
@@ -102,6 +99,22 @@ class Btc
         $res = $client->post($request_url, $request_data);
 
         var_dump($res);
+    }
+
+    public function initData($method = null, $params = [], $jsonrpc = '1.0', $id = time())
+    {
+        if (!$method) {
+            echo 'method can`t be null';exit;
+        }
+
+        return [
+            'json' => [
+                'jsonrpc' => $jsonrpc,
+                'method' => $method,
+                'params' => $params,
+                'id' => $id
+            ]
+        ];
     }
 
     /**
