@@ -12,6 +12,7 @@ class Btc
         $this->regnet = 'http://regbtc:regbtc@127.0.0.1:18334';
         $this->testnet = 'http://testbtc:testbtc@127.0.0.1:18332';
     }
+
     public function phpinfo()
     {
         echo phpinfo();
@@ -22,8 +23,9 @@ class Btc
     {
         $request_data = $this->initData('getnetworkinfo');
 
-        $client = new Client();
-        $res = $client->post($this->regnet, $request_data);
+        // $client = new Client();
+        // $res = $client->post($this->regnet, $request_data);
+        $res = $this->curlPost($this->regnet, $request_data);
 
         var_dump($res);
     }
@@ -149,4 +151,26 @@ class Btc
             return 'curl出错，错误码('.$error.')，couldn`t connect to host。';
         }
     }
+
+    function curlPost($url, $data = [], $timeout = 30)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout-2);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 信任任何证书
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); // 检查证书中是否设置域名
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Expect:']); //避免data数据过长问题
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+        $ret = curl_exec($ch);
+        //var_dump(curl_error($ch));  //查看报错信息
+
+        curl_close($ch);
+
+        return $ret;
+    }
+
 }
