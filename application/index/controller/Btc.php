@@ -1,8 +1,7 @@
 <?php
 namespace app\index\controller;
-vendor('jsonRPC.jsonRPCClient');
-// $client = new \jsonRPCClient('http://localhost:8534');
-// dump($client->personal_newAccount("123456"));
+use GuzzleHttp\Client;
+
 class Btc
 {
     // 查看网络状态
@@ -19,7 +18,8 @@ class Btc
 
         $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
 
-        $res = $this->requestPost($request_url, $request_data);
+        $client = new Client();
+        $res = $client->post($request_url, $request_data);
 
         var_dump($res);
     }
@@ -38,7 +38,8 @@ class Btc
 
         $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
 
-        $res = $this->requestPost($request_url, $request_data);
+        $client = new Client();
+        $res = $client->post($request_url, $request_data);
 
         var_dump($res);
     }
@@ -57,7 +58,8 @@ class Btc
 
         $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
 
-        $res = $this->requestPost($request_url, $request_data);
+        $client = new Client();
+        $res = $client->post($request_url, $request_data);
 
         var_dump($res);
     }  
@@ -76,7 +78,8 @@ class Btc
 
         $request_url = "http://regbtc:regbtc@127.0.0.1:18334";
 
-        $res = $this->requestPost($request_url, $request_data);
+        $client = new Client();
+        $res = $client->post($request_url, $request_data);
 
         var_dump($res);
     }  
@@ -95,7 +98,8 @@ class Btc
 
         $request_url = "http://regbtc:regbtc@127.0.0.1:18332";
 
-        $res = $this->requestPost($request_url, $request_data);
+        $client = new Client();
+        $res = $client->post($request_url, $request_data);
 
         var_dump($res);
     }

@@ -13,7 +13,7 @@ class Author
     	$message = new messageModel;
     	$message->name = '张三';
     	$message->email = 'phper@php.net';
-    	$message->content = 'I love you Ting Huang';
+    	$message->content = 'I love you Miss H';
     	$message->time = 123;
 
     	// 单一职责
