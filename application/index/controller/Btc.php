@@ -23,11 +23,11 @@ class Btc
     public function getnetworkinfo()
     {        
         $client = new JsonRPCClient($this->regnet);
-        //$client->method = 'getnetworkinfo';
-        //$client->params = [];
+        $client->method = 'getnetworkinfo';
+        $client->params = [];
 
         echo "<pre>\n";
-        print_r($client->getnetworkinfo()); echo "\n";
+        print_r($client->getinfo()); echo "\n";
         echo "Received: ".$client->getreceivedbylabel("Your Address")."\n";
         echo "</pre>";
     }
