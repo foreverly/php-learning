@@ -5,8 +5,8 @@ use org\jsonrpcphp\JsonRPCClient;
 
 class Btc
 {
-    private $reg_url;
-    private $test_url;
+    private $regnet;
+    private $testnet;
 
     public function __construct()
     {
@@ -25,8 +25,6 @@ class Btc
         $client = new JsonRPCClient($this->regnet);
         $client->method = 'getnetworkinfo';
         $client->params = [];
-        // $res = $client->post($this->regnet, $request_data);
-        // $res = $this->curlPost($this->regnet, $request_data);
 
         echo "<pre>\n";
         print_r($client->getinfo()); echo "\n";
