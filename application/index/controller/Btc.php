@@ -1,6 +1,7 @@
 <?php
 namespace app\index\controller;
 use GuzzleHttp\Client;
+use org\jsonrpcphp\JsonRPCClient;
 
 class Btc
 {
@@ -20,14 +21,18 @@ class Btc
 
     // 查看网络状态
     public function getnetworkinfo()
-    {
-        $request_data = $this->initData('getnetworkinfo');
-
-        // $client = new Client();
+    {        
+        $client = new JsonRPCClient($this->regnet);
+        $client->method = 'getnetworkinfo';
+        $client->id = time();
+        $client->params = [];
         // $res = $client->post($this->regnet, $request_data);
-        $res = $this->curlPost($this->regnet, $request_data);
+        // $res = $this->curlPost($this->regnet, $request_data);
 
-        var_dump($res);
+        echo "<pre>\n";
+        print_r($client->getinfo()); echo "\n";
+        echo "Received: ".$client->getreceivedbylabel("Your Address")."\n";
+        echo "</pre>";
     }
 
     // 查看区块状态，同步进度等
@@ -114,7 +119,7 @@ class Btc
                 'jsonrpc' => $jsonrpc ?: '1.0',
                 'method' => $method,
                 'params' => $params ?: [],
-                'id' => $id ?: []
+                'id' => $id ?: 123
             ]
         ];
     }

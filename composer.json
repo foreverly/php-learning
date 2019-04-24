@@ -18,7 +18,8 @@
     "require": {
         "php": ">=5.4.0",
         "topthink/framework": "5.0.*",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "weberhofer/jsonrpcphp": "^2.2"
     },
     "autoload": {
         "psr-4": {
