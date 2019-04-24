@@ -166,7 +166,7 @@ class Btc
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
 
         $ret = curl_exec($ch);
-        //var_dump(curl_error($ch));  //查看报错信息
+        var_dump(curl_error($ch));  //查看报错信息
 
         curl_close($ch);
 
