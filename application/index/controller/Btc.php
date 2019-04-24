@@ -7,11 +7,13 @@ class Btc
 {
     private $regnet;
     private $testnet;
+    private $mainnet;
 
     public function __construct()
     {
         $this->regnet = 'http://regbtc:regbtc@127.0.0.1:18334';
         $this->testnet = 'http://testbtc:testbtc@127.0.0.1:18332';
+        $this->mainnet = 'http://admin:admin@127.0.0.1:8332';
     }
 
     public function phpinfo()
@@ -22,7 +24,7 @@ class Btc
     // 查看网络状态
     public function getnetworkinfo()
     {        
-        $client = new JsonRPCClient($this->regnet);
+        $client = new JsonRPCClient($this->mainnet);
         $client->method = 'getnetworkinfo';
         $client->params = [];
 
