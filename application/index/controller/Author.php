@@ -4,9 +4,61 @@ use app\index\model\leaveModel;
 use app\index\model\gbookModel;
 use app\index\model\messageModel;
 use app\index\model\SmoothWarmingUp;
+use think\Controller;
+use think\Request;
+use Redis;
+use Workerman\Worker;
+use Workerman\Connection\AsyncTcpConnection;
 
-class Author
+class Author extends Controller
 {
+    protected $request;
+
+    public function init()
+    {
+        $this->request = Request::instance();
+    }
+
+    public function redis()
+    {
+        $redis = new Redis(); 
+        $redis->connect('127.0.0.1',6379);
+
+        return $redis;
+    }
+
+    public function index()
+    {
+        $this->assign('domain','tp-dev.com');
+
+        //渲染模板
+        return $this->fetch();
+    }
+
+    public function test()
+    {
+        $mobile = $this->request->post('mobile');
+        $content = $this->request->post('content');
+        $times = (int)$this->request->post('times', 1);
+        $pdata = $this->request->post();
+        
+        $batchId = $this->redis()->get('sendBatch') + 1;
+        $this->redis()->set('sendBatch', $batchId);
+
+        $task_connection = new AsyncTcpConnection('Text://127.0.0.1:10086');
+
+        $task_connection->onMessage = function($task_connection, $task_result) use ($pdata)
+        {            
+            $task_connection->send(json_encode(['type' => 'msg', 'batchId' => $batchId, 'content' => $pdata]));
+        };
+
+        // 执行异步连接
+        $task_connection->connect();
+
+        Worker::runAll();
+    
+        echo "[]";
+    }
 
     public function message()
     {
@@ -23,11 +75,11 @@ class Author
 
     	$this->write($pen, $book, $message);
 
-    	$bucket = new SmoothWarmingUp();
-    	for ($i=0; $i < 100; $i++) { 
-    		echo $i, "\t", var_dump($bucket->grant()); echo "剩余：" . ($bucket->capacity - $bucket->token) . "余位<br>";
-    		usleep(50000);
-    	}
+    	// $bucket = new SmoothWarmingUp();
+    	// for ($i=0; $i < 100; $i++) { 
+    	// 	echo $i, "\t", var_dump($bucket->grant()); echo "剩余：" . ($bucket->capacity - $bucket->token) . "余位<br>";
+    	// 	usleep(50000);
+    	// }
     	
     	echo $this->view($book);
     	// $this->delete($book);

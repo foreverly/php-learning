@@ -13,7 +13,9 @@ $data = [
 $res = curlPost($url, $data);
 
 var_dump($res);
-
+// curl -X POST -d '{"jsonrpc":"1.0","method":"getnetworkinfo","params":[],"id":"123"}'  http://admin:admin@127.0.0.1:8332
+// curl --user admin --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getnetworkinfo", "params": [] }'   -H 'content-type: text/plain;' http://127.0.0.1:8332/
+// curl -X POST -H "Content-Type: text/plain" 127.0.0.1:8332 -u admin:admin --data '{"method": "getblockhash","params": [0],"id": "foo"}'
 function curlPost($url, $data = [], $timeout = 30)
 {
     $ch = curl_init();

@@ -19,7 +19,9 @@
         "php": ">=5.4.0",
         "topthink/framework": "5.0.*",
         "guzzlehttp/guzzle": "^6.3",
-        "weberhofer/jsonrpcphp": "^2.2"
+        "weberhofer/jsonrpcphp": "^2.2",
+        "workerman/workerman-for-win": "^3.5",
+        "topthink/think-worker": "v1.0.1"
     },
     "autoload": {
         "psr-4": {
