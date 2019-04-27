@@ -61,6 +61,7 @@
 
 ws = new WebSocket("ws://www.tp-dev.com:2346");
 // ws2 = new WebSocket("ws://www.tp-dev.com:10086");
+ws3 = new WebSocket("ws://www.tp-dev.com:10088");
 
 $(".submit-btn").on('click', function(){
 	var mobile = $("#mobile").val();
@@ -99,8 +100,16 @@ ws.onopen = function() {
 // };
 
 ws.onmessage = function(e) {
-    
-    var edata = JSON.parse(e.data);
+    handlMessage(e);
+};
+
+ws3.onmessage = function(e) {
+    handlMessage(e);
+};
+
+function handlMessage(e)
+{
+	var edata = JSON.parse(e.data);
     var type = edata.type;
 
     // console.log("收到服务端2的消息：" + edata.content);
@@ -130,6 +139,6 @@ ws.onmessage = function(e) {
 		 default:
 		 	 break;
 	}
+}
 
-};
 </script>

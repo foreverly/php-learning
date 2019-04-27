@@ -45,19 +45,31 @@ class Author extends Controller
         $batchId = $this->redis()->get('sendBatch') + 1;
         $this->redis()->set('sendBatch', $batchId);
 
-        $task_connection = new AsyncTcpConnection('Text://127.0.0.1:10086');
+        for ($i=0; $i < $times; $i++) {
+            $rdata = [
+                'batchId' => $batchId,
+                'data' => [
+                    'mobile' => $mobile,
+                    'content' => $content
+                ]
+            ];
 
-        $task_connection->onMessage = function($task_connection, $task_result) use ($pdata)
-        {            
-            $task_connection->send(json_encode(['type' => 'msg', 'batchId' => $batchId, 'content' => $pdata]));
-        };
+            $this->redis->rpush('taskSendMessage', json_encode($rdata));            
+        }
 
-        // 执行异步连接
-        $task_connection->connect();
+        // $task_connection = new AsyncTcpConnection('Text://127.0.0.1:10086');
 
-        Worker::runAll();
+        // $task_connection->onMessage = function($task_connection, $task_result) use ($pdata)
+        // {            
+        //     $task_connection->send(json_encode(['type' => 'msg', 'batchId' => $batchId, 'content' => $pdata]));
+        // };
+
+        // // 执行异步连接
+        // $task_connection->connect();
+
+        // Worker::runAll();
     
-        echo "[]";
+        echo json_encode(['batchId' => $batchId, 'total' => $times, 'process' => 0]);
     }
 
     public function message()

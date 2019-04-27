@@ -1,5 +1,6 @@
 <?php
 use Workerman\Worker;
+use Redis;
 // use lib\SendMessage;
 
 require_once __DIR__ . '/../vendor/workerman/workerman/Autoloader.php';

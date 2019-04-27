@@ -31,9 +31,8 @@ class Worker extends Server
      */
     public function onMessage($connection, $data)
     {
-        // $connection->send('我收到你的信息了');
         // 与远程task服务建立异步连接，ip为远程task服务的ip，如果是本机就是127.0.0.1，如果是集群就是lvs的ip
-        $task_connection = new AsyncTcpConnection('Text://127.0.0.1:12345');
+        // $task_connection = new AsyncTcpConnection('Text://127.0.0.1:12345');
 
         $pdata = json_decode($data, true);        
         $mobile = $pdata['mobile'];
@@ -43,39 +42,26 @@ class Worker extends Server
         $batchId = $this->redis()->get('sendBatch') + 1;
         $this->redis()->set('sendBatch', $batchId);
 
-        // $connection->send('消息入队完毕');
+        // 直接返回结果防止页面一直等待
+        $connection->send(json_encode(['type' => 'process', 'batchId' => $batchId, 'total' => $times, 'process' => 0]));
+
         for ($i = 0; $i < $times; $i++) { 
-            $args = ['batchId' => $this->redis()->get('sendBatch'), 'mobile' => $mobile, 'content' => $content];
 
-            // 任务及参数数据
-            $task_data = array(
-                'function' => 'send_message',
-                'args'       => $args,
-            );
+            $rdata = [
+                'batchId' => $batchId,
+                'data' => [
+                    'mobile' => $mobile,
+                    'content' => $content
+                ]
+            ];
 
-            // 发送数据
-            $task_connection->send(json_encode($task_data));
-            // echo $re;
-            $connection->send(json_encode(['type' => 'msg', 'content' => "消息入队第".($i+1)."条"]));         
+            $this->redis()->lpush('taskSendMessage', json_encode($rdata));
+            $this->redis()->set('taskSendMessage_' . $batchId, json_encode(['total' => $times, 'process' => 0]));
+
+            // $connection->send(json_encode(['type' => 'msg', 'content' => "消息入队第".($i+1)."条"]));         
         }
-
-        $connection->send(json_encode(['type' => 'msg', 'content' => '消息入队完毕']));
         
-        // 异步获得结果
-        $t = 0;
-        $task_connection->onMessage = function($task_connection, $task_result) use ($connection, $batchId, $times, &$t)
-        {
-            ++$t;
-            // 结果
-            // var_dump($task_result);
-            // 获得结果后记得关闭异步连接
-            // $task_connection->close();
-            // 通知对应的websocket客户端任务完成
-            $connection->send(json_encode(['type' => 'process', 'batchId' => $batchId, 'total' => $times, 'process' => $t]));
-        };
-
-        // 执行异步连接
-        $task_connection->connect();
+        $connection->send(json_encode(['type' => 'msg', 'content' => '消息入队完毕']));
     }
 
     /**
