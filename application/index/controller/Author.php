@@ -31,6 +31,16 @@ class Author extends Controller
     {
         $this->assign('domain','tp-dev.com');
 
+        $hlist = $this->redis()->keys('MsgSendList_*');
+        $hdata = [];
+        foreach ($hlist as $hname) {
+            $hdata[] = $this->redis()->hgetall($hname);            
+        }
+        echo "<pre>";
+        print_r($hdata);
+        print_r($hdata[0]['batchId']);
+        echo "</pre>";
+        $this->assign('hdata', $hdata);
         //渲染模板
         return $this->fetch();
     }

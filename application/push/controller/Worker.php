@@ -42,26 +42,31 @@ class Worker extends Server
         $batchId = $this->redis()->get('sendBatch') + 1;
         $this->redis()->set('sendBatch', $batchId);
 
-        // 直接返回结果防止页面一直等待
-        $connection->send(json_encode(['type' => 'process', 'batchId' => $batchId, 'total' => $times, 'process' => 0]));
+        if ($times > 0) {
+            $this->redis()->hmset('MsgSendList_' . $batchId, ['batchId' => $batchId, 'total' => $times, 'process' => 0]);
 
-        for ($i = 0; $i < $times; $i++) { 
+            // var_dump($this->redis()->hget('user', 'name'));
+            // 直接返回结果防止页面一直等待
+            $connection->send(json_encode(['type' => 'process', 'batchId' => $batchId, 'total' => $times, 'process' => 0]));
 
-            $rdata = [
-                'batchId' => $batchId,
-                'data' => [
-                    'mobile' => $mobile,
-                    'content' => $content
-                ]
-            ];
+            for ($i = 0; $i < $times; $i++) { 
 
-            $this->redis()->lpush('taskSendMessage', json_encode($rdata));
-            $this->redis()->set('taskSendMessage_' . $batchId, json_encode(['total' => $times, 'process' => 0]));
+                $rdata = [
+                    'batchId' => $batchId,
+                    'data' => [
+                        'mobile' => $mobile,
+                        'content' => $content
+                    ]
+                ];
 
-            // $connection->send(json_encode(['type' => 'msg', 'content' => "消息入队第".($i+1)."条"]));         
-        }
-        
-        $connection->send(json_encode(['type' => 'msg', 'content' => '消息入队完毕']));
+                $this->redis()->lpush('taskSendMessage', json_encode($rdata));
+                $this->redis()->set('taskSendMessage_' . $batchId, json_encode(['total' => $times, 'process' => 0]));
+
+                // $connection->send(json_encode(['type' => 'msg', 'content' => "消息入队第".($i+1)."条"]));         
+            }
+            
+            $connection->send(json_encode(['type' => 'msg', 'content' => '消息入队完毕']));
+        } 
     }
 
     /**

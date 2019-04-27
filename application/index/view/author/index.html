@@ -50,7 +50,9 @@
 			</div>
 		</form>
 		<div class="list-box">
-			
+			{volist name="hdata" id="vdata"}
+		    	<p class="list-line list-{$vdata['batchId']}">批次:{$vdata['batchId']} &nbsp;&nbsp;<em>OK!({$vdata['process']}/{$vdata['total']})</em></p>
+			{/volist}
 		</div>
 	</div>
 		
